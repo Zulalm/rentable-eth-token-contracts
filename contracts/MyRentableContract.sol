@@ -4,17 +4,24 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract MyRentableToken is ERC20 {
 
-
-    mapping(address account => balance) private _balances;
-    uint256 private _totalSupply;
-
-    struct balance {
-        uint256 tokens;
-        rentedToken[] rented;
-        rentedToken[] borrowed;
+    struct Node{
+        RentedToken token;
+        uint256 next;
     }
 
-    struct rentedToken {
+
+    mapping(address account => Balance) private _balances;
+    mapping(uint256 => Node) private nodes;
+    uint256 private freeListHead;
+    uint256 private _totalSupply;
+
+    struct Balance {
+        uint256 tokens;
+        uint256 rentedHead;
+        uint256 borrowedHead;
+    }
+
+    struct RentedToken {
         address renterOrBorrower;
         uint256 startDate;
         uint256 endDate;
@@ -28,31 +35,45 @@ contract MyRentableToken is ERC20 {
 
     function balanceOf(address account) override public view virtual returns (uint256) {
         uint256 result = _balances[account].tokens;
-        for (uint i = 0; i < _balances[account].borrowed.length; i++ ){
-            if(_balances[account].borrowed[i].startDate <= block.timestamp && _balances[account].borrowed[i].endDate >= block.timestamp){
-                result += _balances[account].borrowed[i].amount;
+        uint256 borrowedIterator = _balances[account].borrowedHead;
+        uint256 rentedIterator = _balances[account].rentedHead;
+
+        while(borrowedIterator != uint256(0)){
+            RentedToken memory token = nodes[borrowedIterator].token;
+            if(token.startDate <= block.timestamp && token.endDate >= block.timestamp){
+                result += token.amount;
             }
+            borrowedIterator = nodes[borrowedIterator].next;
         }
-        for(uint i = 0; i < _balances[account].rented.length; i++ ){
-            if (_balances[account].rented[i].startDate <= block.timestamp && _balances[account].rented[i].endDate >= block.timestamp ){
-                result -= _balances[account].rented[i].amount;
+         while(rentedIterator != uint256(0)){
+            RentedToken memory token = nodes[rentedIterator].token;
+            if(token.startDate <= block.timestamp && token.endDate >= block.timestamp){
+                result -= token.amount;
             }
+            rentedIterator = nodes[rentedIterator].next;
         }
+
         return result;
     }
 
     function balanceOfInterval(address account, uint256 startDate, uint256 endDate) public view virtual returns (uint256) {
         uint256 result = _balances[account].tokens;
-        for (uint i = 0; i < _balances[account].borrowed.length; i++ ){
-            if(_balances[account].borrowed[i].startDate <= startDate && _balances[account].borrowed[i].endDate >= endDate){
-                result += _balances[account].borrowed[i].amount;
+        uint256 borrowedIterator = _balances[account].borrowedHead;
+        uint256 rentedIterator = _balances[account].rentedHead;
+        while(borrowedIterator != uint256(0)){
+            RentedToken memory token = nodes[borrowedIterator].token;
+            if(token.startDate <= startDate && token.endDate >= endDate){
+                result += token.amount;
             }
+            borrowedIterator = nodes[borrowedIterator].next;
         }
-        for(uint i = 0; i < _balances[account].rented.length; i++ ){
-            if ((_balances[account].rented[i].startDate > startDate || _balances[account].rented[i].endDate > startDate) &&
-            (_balances[account].rented[i].startDate < endDate  || _balances[account].rented[i].endDate  < endDate) ){
-                result -= _balances[account].rented[i].amount;
+        while(rentedIterator != uint256(0)){
+            RentedToken memory token = nodes[rentedIterator].token;
+            if ((token.startDate > startDate || token.endDate > startDate) &&
+            (token.startDate < endDate  || token.endDate  < endDate) ){
+                result -= token.amount;
             }
+            rentedIterator = nodes[rentedIterator].next;
         }
         return result;
     }
@@ -63,18 +84,93 @@ contract MyRentableToken is ERC20 {
         if (balanceOfInterval(owner, startDate, endDate) < value)  {
             return false;
         }
-        else if (balanceOf(owner) >= value){
-            _balances[owner].rented.push(rentedToken(to, startDate,endDate,value));
-            _balances[to].borrowed.push(rentedToken(owner, startDate,endDate,value));
-            return true;
-        }
         else{
-            _balances[owner].rented.push(rentedToken(to, startDate,endDate,value));
-            _balances[to].borrowed.push(rentedToken(owner, startDate,endDate,value));
+            uint256 nodeId1;
+            uint256 nodeId2;
+            if(freeListHead != uint256(0)){
+                nodeId1 = getNodeFromFreeList();
+            }else{
+                nodeId1 = createNewNodeId(owner);
+            }
+            if(freeListHead != uint256(0)){
+                nodeId2 = getNodeFromFreeList();
+            }else{
+                nodeId2 = createNewNodeId(to);
+            }
+            uint256 ownerRentedHead = _balances[owner].rentedHead;
+            uint256 toBorrowedHead = _balances[to].borrowedHead;
+
+            _balances[owner].rentedHead = nodeId1;
+            _balances[to].borrowedHead = nodeId2;
+
+            nodes[nodeId1].next = ownerRentedHead;
+            nodes[nodeId2].next = toBorrowedHead;
+
+            nodes[nodeId1].token = RentedToken(to, startDate,endDate,value);
+            nodes[nodeId2].token = RentedToken(owner, startDate,endDate,value);
             return true;
         }
     }
+    function refund() public virtual returns (bool){
+        address account = msg.sender;
+        bool refunded = false;
+        uint256 borrowedIterator = _balances[account].borrowedHead;
+        uint256 prevBorrowedIterator = uint256(0);
 
+        while(borrowedIterator != uint256(0)){
+            RentedToken memory token = nodes[borrowedIterator].token;
+            if(token.startDate < block.timestamp && token.endDate < block.timestamp){
+                // token should be refunded
+                refunded = true;
+                if(prevBorrowedIterator == uint256(0)){
+                    // refunded token was the head of the borrowed list
+                    uint256 next = nodes[borrowedIterator].next;
+                    addNodeToFreeList(borrowedIterator);
+                    borrowedIterator = next;
+                    _balances[account].borrowedHead = borrowedIterator;
+                }else{
+                    nodes[prevBorrowedIterator].next = nodes[borrowedIterator].next;
+                    addNodeToFreeList(borrowedIterator);
+                    borrowedIterator = nodes[prevBorrowedIterator].next;
+                }
+            }else{
+                prevBorrowedIterator = borrowedIterator;
+                borrowedIterator = nodes[borrowedIterator].next;
+            }
+            
+        }
+        return refunded;
+    }
+
+    function getRefund() public virtual returns (bool){
+        address account = msg.sender;
+        bool refunded = false;
+        uint256 rentedIterator = _balances[account].rentedHead;
+        uint256 prevRentedIterator = uint256(0);
+
+        while(rentedIterator != uint256(0)){
+            RentedToken memory token = nodes[rentedIterator].token;
+            if(token.startDate < block.timestamp && token.endDate < block.timestamp){
+                // token should be refunded
+                refunded = true;
+                if(prevRentedIterator == uint256(0)){
+                    // refunded token was the head of the borrowed list
+                    uint256 next = nodes[rentedIterator].next;
+                    addNodeToFreeList(rentedIterator);
+                    rentedIterator = next;
+                    _balances[account].rentedHead = rentedIterator;
+                }else{
+                    nodes[prevRentedIterator].next = nodes[rentedIterator].next;
+                    addNodeToFreeList(rentedIterator);
+                    rentedIterator = nodes[prevRentedIterator].next;
+                }
+            }else{
+                prevRentedIterator = rentedIterator;
+                rentedIterator = nodes[rentedIterator].next;
+            }
+        }
+        return refunded;
+    }
  function _update(address from, address to, uint256 value) override internal virtual {
         if (from == address(0)) {
             // Overflow check required: The rest of the code assumes that totalSupply never overflows
@@ -105,5 +201,24 @@ contract MyRentableToken is ERC20 {
         emit Transfer(from, to, value);
     }
 
+    function getNodeFromFreeList() internal returns(uint256 nodeId){
+        uint256 next = nodes[freeListHead].next;
+        nodes[freeListHead].next = uint256(0);
+        nodeId = freeListHead;
+        freeListHead = next;
+        return nodeId;
+    }
+    function addNodeToFreeList(uint256 nodeId) internal{
+        nodes[nodeId].next = freeListHead;
+        freeListHead = nodeId;
+    }
+
+    function createNewNodeId(address owner) internal view returns(uint256){
+        require(owner != address(0), "Invalid owner address");
+        require(bytes(this.name()).length > 0, "Token name must not be empty");
+        require(block.timestamp > 0, "Invalid timestamp");
+
+        return uint256(keccak256(abi.encodePacked(owner, this.name(), block.timestamp)));
+    }
 
 }
