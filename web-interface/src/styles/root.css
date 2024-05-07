@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --primary-color-vibrant: #6C22A6;
+    --primary-color-light: #6962AD;
+    --secondary-color-light: #83C0C1;
+    --secondary-color-vibrant: #96E9C6;
+    --secondary-color-dark: #0784c3;
+    --white: #FFFFFF;
+    --grey: #e4e4e4;
+    --light-grey: #f7f7f7;
+    --primary-font: 'Roboto', sans-serif;
+    background-color: var(--light-grey) !important;
+    margin: auto;
+    align-items: center;
+}
+
+body {
+    font-family: var(--primary-font);
+    background-color: var(--light-grey) !important;
+
+}
+
+div {
+
+    margin: auto;
+    align-items: center;
+
+}
+
+.card-custom {
+    margin: 10px 10px 10px 10px;
+    border-color: lightgrey;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+}
+
+.card-custom .small {
+    margin: 1px 1px 1px 1px;
+    border-color: lightgrey;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 100% !important;
+}
+
+.page-div {
+    width: 85%;
+    margin-top: 30px;
+}
+
+.pagination {
+    background-color: #f3f4f6;
+    /* Set background color */
+}
+
+.pagination .page-link {
+    color: #6c757d;
+    /* Set text color */
+}
+
+
+
+.pagination .page-item.active:hover .page-link {
+    background-color: var(--secondary-color-light);
+    /* Set background color of active page */
+    border-color: var(--secondary-color-light);
+    color: #fff;
+    /* Set text color of active page when hovered */
+}
+
+.pagination .page-link:hover {
+    color: var(--secondary-color-light);
+    /* Set text color on hover */
+    background-color: #e9ecef;
+    /* Set background color on hover */
+    border-color: #dee2e6;
+    /* Set border color on hover */
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--secondary-color-light);
+    /* Set background color of active page */
+    border-color: var(--secondary-color-light);
+    /* Set border color of active page */
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    /* Set text color of disabled page */
+}
+
+.card-title {
+
+    text-align: center;
+    margin-top: 5px;
+    color: var(--primary-color-vibrant) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+}
+
+.token-symbol {
+    color: var(--primary-color-vibrant) !important;
+    font-size: xx-large;
+}
+
+.secondary-title {
+    color: #6c757d;
+    text-align: center;
+    font-size: small;
+}
+
+.token-detail-body {
+    text-align: center;
+    font-size: large;
+}

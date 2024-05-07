@@ -1,0 +1,9 @@
+.footer {
+    background-color: var(--light-grey);
+    /* Primary color */
+    margin: 10px 5px 0px 5px;
+    height: 10px;
+    width: 100% !important;
+    align-items: center;
+    /* Shadow */
+}

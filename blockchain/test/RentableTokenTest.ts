@@ -10,7 +10,7 @@ describe("RentableToken", function () {
   async function deployTokenFixture() {
     const [owner, otherAccount1, otherAccount2, otherAccount3] = await ethers.getSigners();
     const date = (await time.latest())
-    const RentableToken = await ethers.getContractFactory("RentableToken");
+    const RentableToken = await ethers.getContractFactory("RentableERC20");
     const contract = await RentableToken.deploy();
 
     return { contract, owner, otherAccount1, otherAccount2, otherAccount3, date };

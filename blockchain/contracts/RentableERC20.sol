@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract RentableToken is ERC20 {
+contract RentableERC20 is ERC20 {
     struct Balance {
         uint256 tokens;
         uint256 rentedHead;
@@ -33,8 +33,8 @@ contract RentableToken is ERC20 {
     uint256 private freeListHead;
     uint256 private _totalSupply;
 
-    constructor() ERC20("MyToken", "MT") {
-        _mint(msg.sender, 1000 * 10 ** 18);
+    constructor(string memory name, string memory symbol, uint256 totalSupply) ERC20(name, symbol) {
+        _mint(msg.sender, totalSupply);
     }
 
     event Rent(

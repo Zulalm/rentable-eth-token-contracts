@@ -1,0 +1,41 @@
+/* Header background color and shadow */
+
+.navbar-custom {
+    background-color: var(--primary-color-light);
+    /* Primary color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+    margin: 0px 5px 10px 5px;
+    height: 70px;
+    align-items: center;
+    /* Shadow */
+}
+
+/* Navbar brand color */
+.navbar-custom .navbar-brand {
+    color: #fff;
+    /* White color for the brand */
+}
+
+/* Navbar links color */
+.navbar-custom .nav-link {
+    color: #fff;
+    /* White color for links */
+}
+
+/* Navbar links hover color */
+.navbar-custom .nav-link:hover {
+    color: var(--secondary-color-light);
+    /* Secondary color */
+}
+
+/* Navbar links hover color */
+.navbar-custom .nav-link:active {
+    color: var(--secondary-color-light);
+    /* Secondary color */
+}
+
+.nav-link.active,
+.nav-link:active {
+    color: #fff !important;
+}
