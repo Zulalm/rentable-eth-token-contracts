@@ -62,7 +62,7 @@ const RentedTokens = () => {
                 />
             </div>
 
-            <div className='card card-custom'>
+            <div className='card card-custom' style={{ height: 400, paddingTop: 30,  overflow: "auto" }}>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -80,7 +80,7 @@ const RentedTokens = () => {
                                 <td>{token.startDate.toUTCString()}</td>
                                 <td>{token.endDate.toUTCString()}</td>
                                 <td>{token.amount}</td>
-                                {token.endDate.getTime() < Date.now() && <td><button className="btn btn-link">Reclaim Token</button></td>}
+                                <td>{token.endDate.getTime() < Date.now() && <button className="btn btn-link">Reclaim Token</button>}</td>
                             </tr>
                         ))}
                     </tbody>

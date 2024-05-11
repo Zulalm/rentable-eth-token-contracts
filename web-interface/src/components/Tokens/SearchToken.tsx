@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Token } from '../../models/Token';
+import { Token, TokenStandard } from '../../models/Token';
 import { Table, Pagination } from 'react-bootstrap';
 import { PrimaryColorVibrant, SecondaryColorDark, SecondaryColorLight, SecondaryColorVibrant, White } from '../../constants/colors';
 import CustomButton from '../Generic/CustomButton';
@@ -66,7 +66,7 @@ const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
                             <th scope="col-3">Name</th>
                             <th scope="col">Symbol</th>
                             <th scope="col">Token Standard</th>
-                            <th scope="col">Amount</th>
+                            <th scope="col">Total Supply</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,7 +74,7 @@ const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
                             <tr key={token.id} onClick={() => handleTokenSelect(token)}>
                                 <td><button type="button" className="btn btn-link">{token.name}</button></td>
                                 <td>{token.symbol}</td>
-                                <td>{token.standard}</td>
+                                <td>{token!.standard ==  TokenStandard.ERC20?  "ERC20": (token!.standard  ==  TokenStandard.ERC721 ? "ERC721" :  "ERC1155")}</td>
                                 <td>{token.amount}</td>
                             </tr>
                         ))}

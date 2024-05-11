@@ -177,7 +177,7 @@ export const mockRentedTokens: RentedToken[] = [
         id: 1,
         account: "user123",
         startDate: new Date("2024-05-01"),
-        endDate: new Date("2024-05-15"),
+        endDate: new Date("2024-05-10"),
         amount: 100,
         tokenId: 1234
     },
