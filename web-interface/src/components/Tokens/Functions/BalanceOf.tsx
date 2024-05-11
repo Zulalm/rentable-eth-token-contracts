@@ -1,35 +1,31 @@
+import { useState } from "react";
 import { TokenStandard } from "../../../models/Token";
 interface Props {
     tokenStandard: TokenStandard
 }
 
-const Rent: React.FC<Props> = ({ tokenStandard }) => {
+const BalanceOf: React.FC<Props> = ({ tokenStandard }) => {
+
+    const [isChecked, setIsChecked] = useState<boolean>(false);
     return (
         <>
-            <div className="card" style={{ height: 400 , display: "block", padding: 50   }}>
+            <div className="card card" style={{ height: 400 , display: "block", padding: 50   }}>
                 <div className="card-title">
-                    Rent Tokens
+                    Balance
                 </div>
                 <div className="card-body">
                     <form>
                         <div className="col mb-3">
-                            {tokenStandard !== TokenStandard.ERC20 && (<div className="row mb-3">
-                                <div className="col">
-                                    <div className="form-floating">
-                                        <input type="text" className="form-control" id="tokenId" name="tokenId" placeholder="Token Id" required />
-                                        <label className="form-label" htmlFor="tokenId">Token Id</label>
-                                    </div>
-                                </div>
-                            </div>)}
-                            {tokenStandard !== TokenStandard.ERC721 && (<div className="row mb-3">
-                                <div className="col">
-                                    <div className="form-floating">
-                                        <input type="text" className="form-control" id="amount" name="amount" placeholder="Amount" required />
-                                        <label className="form-label" htmlFor="amount">Amount</label>
-                                    </div>
-                                </div>
-                            </div>)}
                             <div className="row mb-3">
+                                <div className="col">
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" id="balanceType" name="balanceType" value="" checked={isChecked}
+                                            onChange={() => setIsChecked(!isChecked)} />
+                                        <label className="form-label" htmlFor="balanceType">Balance of Interval</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {isChecked && (<div className="row mb-3">
                                 <div className="col">
                                     <div className="form-floating">
                                         <input type="date" className="form-control ml-1" id="startDate" name="startDate" required />
@@ -41,8 +37,9 @@ const Rent: React.FC<Props> = ({ tokenStandard }) => {
                                         <input type="date" className="form-control" id="endDate" name="endDate" required />
                                         <label htmlFor="endDate" className="form-label">End Date</label>
                                     </div>
+
                                 </div>
-                            </div>
+                            </div>)}
                             <div className="row mb-3">
                                 <div className="col">
                                     <div className="form-floating">
@@ -51,13 +48,10 @@ const Rent: React.FC<Props> = ({ tokenStandard }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row mb-3">
-                                <button type="submit" className="btn btn-primary">Rent</button>
-                            </div>
-
                         </div>
-
-
+                        <div className="row mb-3">
+                            <button type="submit" className="btn btn-primary">Get Balance</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -65,4 +59,4 @@ const Rent: React.FC<Props> = ({ tokenStandard }) => {
         </>
     );
 };
-export default Rent;
+export default BalanceOf;

@@ -1,9 +1,22 @@
-interface Token {
+export enum TokenStandard {
+    ERC20,
+    ERC721,
+    ERC1155,
+}
+
+export interface Token {
     id: number;
     name: string;
     symbol: string;
     amount: number;
-    standard: "ERC20" | "ERC721" | "ERC1155";
+    standard: TokenStandard;
 }
 
-export type { Token } 
+export interface RentedToken {
+    id: number;
+    account: string;
+    startDate: Date;
+    endDate: Date;
+    amount?: number;
+    tokenId?: number;
+}

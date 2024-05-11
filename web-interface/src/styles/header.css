@@ -4,13 +4,12 @@
     background-color: var(--primary-color-light);
     /* Primary color */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     margin: 0px 5px 10px 5px;
     height: 70px;
     align-items: center;
     /* Shadow */
 }
-
 /* Navbar brand color */
 .navbar-custom .navbar-brand {
     color: #fff;
@@ -33,9 +32,4 @@
 .navbar-custom .nav-link:active {
     color: var(--secondary-color-light);
     /* Secondary color */
-}
-
-.nav-link.active,
-.nav-link:active {
-    color: #fff !important;
 }
