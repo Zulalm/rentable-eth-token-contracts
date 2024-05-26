@@ -2,19 +2,36 @@ import { useState } from "react";
 import { TokenStandard } from "../../../models/Token";
 interface Props {
     tokenStandard: TokenStandard
+    balance: (address: string, startDate: string, endDate: string) => void;
 }
 
-const BalanceOf: React.FC<Props> = ({ tokenStandard }) => {
+const BalanceOf: React.FC<Props> = ({ tokenStandard, balance }) => {
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        if (isChecked) {
+            const address = form['address'].value;
+            const startDate = form['startDate'].value;
+            const endDate = form['endDate'].value;
+            balance(address, startDate, endDate);
+        } else {
+            const address = form['address'].value;
+            balance(address, "", "");
+        }
+
+
+    }
 
     const [isChecked, setIsChecked] = useState<boolean>(false);
     return (
         <>
-            <div className="card card" style={{ height: 400 , display: "block", padding: 50   }}>
+            <div className="card card" style={{ height: 450, display: "block", padding: 50 }}>
                 <div className="card-title">
                     Balance
                 </div>
                 <div className="card-body">
-                    <form>
+                    <form onSubmit={(e) => { onSubmit(e) }}>
                         <div className="col mb-3">
                             <div className="row mb-3">
                                 <div className="col">

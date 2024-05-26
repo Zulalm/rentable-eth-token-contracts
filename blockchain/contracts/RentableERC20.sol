@@ -33,8 +33,13 @@ contract RentableERC20 is ERC20 {
     uint256 private freeListHead;
     uint256 private _totalSupply;
 
-    constructor(string memory name, string memory symbol, uint256 totalSupply) ERC20(name, symbol) {
-        _mint(msg.sender, totalSupply);
+    constructor(
+        address owner,
+        string memory name,
+        string memory symbol,
+        uint256 __totalSupply
+    ) ERC20(name, symbol) {
+        __mint(owner, __totalSupply);
     }
 
     event Rent(
@@ -108,12 +113,12 @@ contract RentableERC20 is ERC20 {
     }
 
     function rent(
+        address owner,
         address to,
         uint256 value,
         uint256 startDate,
         uint256 endDate
     ) public virtual returns (bool) {
-        address owner = msg.sender;
         require(
             balanceOfInterval(owner, startDate, endDate) >= value,
             "Renting amount exceeds the balance"
@@ -175,11 +180,10 @@ contract RentableERC20 is ERC20 {
         return true;
     }
 
-    function returnBorrowedToken(uint256 nodeId) public virtual {
+    function returnBorrowedToken(address account, uint256 nodeId) public virtual {
         RentedToken memory token = nodes[nodeId].token;
-        address account = msg.sender;
         require(
-                token.endDate < block.timestamp,
+            token.endDate < block.timestamp,
             "Token cannot be returned yet"
         );
         // token should be returned
@@ -205,11 +209,10 @@ contract RentableERC20 is ERC20 {
         forceReclaimRentedToken(token.renterOrBorrower, token.account);
     }
 
-    function reclaimRentedToken(uint256 nodeId) public virtual {
+    function reclaimRentedToken(address account, uint256 nodeId) public virtual {
         RentedToken memory token = nodes[nodeId].token;
-        address account = msg.sender;
         require(
-                token.endDate < block.timestamp,
+            token.endDate < block.timestamp,
             "Token cannot be returned yet"
         );
         // token should be returned
@@ -235,11 +238,12 @@ contract RentableERC20 is ERC20 {
         forceReturnBorrowedToken(token.renterOrBorrower, token.account);
     }
 
-    function forceReturnBorrowedToken(uint256 nodeId , address account) internal virtual {
+    function forceReturnBorrowedToken(
+        uint256 nodeId,
+        address account
+    ) internal virtual {
         RentedToken memory token = nodes[nodeId].token;
-        if (
-            token.endDate < block.timestamp
-        ) {
+        if (token.endDate < block.timestamp) {
             // token should be returned
             uint256 prevBorrowedIterator = nodes[nodeId].prev;
             if (prevBorrowedIterator == uint256(0)) {
@@ -261,11 +265,12 @@ contract RentableERC20 is ERC20 {
         }
     }
 
-    function forceReclaimRentedToken(uint256 nodeId, address account) internal virtual {
+    function forceReclaimRentedToken(
+        uint256 nodeId,
+        address account
+    ) internal virtual {
         RentedToken memory token = nodes[nodeId].token;
-        if (
-            token.endDate < block.timestamp
-        ) {
+        if (token.endDate < block.timestamp) {
             // token should be returned
             uint256 prevRentedIterator = nodes[nodeId].prev;
             if (prevRentedIterator == uint256(0)) {
@@ -288,8 +293,14 @@ contract RentableERC20 is ERC20 {
         }
     }
 
-    function getRentedTokens() public view returns (RentedToken[] memory) {
-        address account = msg.sender;
+    function __mint(address account, uint256 value) internal {
+        if (account == address(0)) {
+            revert ERC20InvalidReceiver(address(0));
+        }
+        _update(address(0), account, value);
+    }
+
+    function getRentedTokens(address account) public view returns (RentedToken[] memory) {
         uint256 noNodes = _balances[account].noRentedTokens;
         RentedToken[] memory tokens = new RentedToken[](noNodes);
         uint256 nodeId = _balances[account].rentedHead;
@@ -307,12 +318,12 @@ contract RentableERC20 is ERC20 {
         }
         return tokens;
     }
-    function getNoRentedTokens() public view returns(uint256) {
-        return _balances[msg.sender].noRentedTokens;
+
+    function getNoRentedTokens(address account) public view returns (uint256) {
+        return _balances[account].noRentedTokens;
     }
 
-    function getBorrowedTokens() public view returns (RentedToken[] memory) {
-        address account = msg.sender;
+    function getBorrowedTokens(address account) public view returns (RentedToken[] memory) {
         uint256 noNodes = _balances[account].noBorrowedTokens;
         RentedToken[] memory tokens = new RentedToken[](noNodes);
         uint256 nodeId = _balances[account].borrowedHead;
@@ -390,5 +401,9 @@ contract RentableERC20 is ERC20 {
             uint256(
                 keccak256(abi.encodePacked(owner, this.name(), block.timestamp))
             );
+    }
+
+    function totalSupply() public view override returns (uint256) {
+        return _totalSupply;
     }
 }

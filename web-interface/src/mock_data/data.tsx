@@ -2,168 +2,168 @@ import { RentedToken, Token, TokenStandard } from "../models/Token";
 
 const mockTokens: Token[] = [
     {
-        id: 1,
+        address: "1",
         name: "Token A",
         symbol: "TKA",
         amount: 1000,
         standard: TokenStandard.ERC20
     },
     {
-        id: 2,
+        address: "2",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 3,
+        address: "3",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 4,
+        address: "4",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 5,
+        address: "5",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 6,
+        address: "6",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 7,
+        address: "7",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 8,
+        address: "8",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 9,
+        address: "9",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 10,
+        address: "10",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 11,
+        address: "11",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 12,
+        address: "12",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 13,
+        address: "13",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 14,
+        address: "14",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 15,
+        address: "15",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 16,
+        address: "16",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 17,
+        address: "17",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 18,
+        address: "18",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 19,
+        address: "19",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 20,
+        address: "20",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC20
     },
     {
-        id: 21,
+        address: "21",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC721
     },
     {
-        id: 22,
+        address: "22",
         name: "Token B",
         symbol: "TKB",
         amount: 500,
         standard: TokenStandard.ERC1155
     },
     {
-        id: 23,
+        address: "23",
         name: "Token C",
         symbol: "TKC",
         amount: 200,
         standard: TokenStandard.ERC1155
     },
     {
-        id: 24,
+        address: "24",
         name: "Token D",
         symbol: "TKD",
         amount: 100,

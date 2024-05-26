@@ -4,13 +4,14 @@ import { Table, Pagination } from 'react-bootstrap';
 import { PrimaryColorVibrant, SecondaryColorDark, SecondaryColorLight, SecondaryColorVibrant, White } from '../../constants/colors';
 import CustomButton from '../Generic/CustomButton';
 import { ArrowRight, CaretRightFill } from 'react-bootstrap-icons';
-import { mockRentedTokens } from '../../mock_data/data';
+
+interface Props {
+    tokens: RentedToken[];
+}
 
 
-const RentedTokens = () => {
+const RentedTokens : React.FC<Props> = ({ tokens }) => {
     const itemsPerPage: number = 5; // Number of items to display per page
-
-    const tokens = mockRentedTokens;
 
     const onSelectToken = (token: RentedToken) => {
 
@@ -62,7 +63,7 @@ const RentedTokens = () => {
                 />
             </div>
 
-            <div className='card card-custom' style={{ height: 400, paddingTop: 30,  overflow: "auto" }}>
+            <div className='card card-custom' style={{ height: 450, paddingTop: 30,  overflow: "auto" }}>
                 <Table striped bordered hover>
                     <thead>
                         <tr>

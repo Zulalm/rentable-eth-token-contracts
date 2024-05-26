@@ -37,7 +37,6 @@ contract RentableERC1155 is ERC1155 {
     mapping(uint256 id => mapping(address account => Balance)) private _balances;
     mapping(uint256 => Node) private nodes;
     uint256 private freeListHead;
-    uint256 private _totalSupply;
 
     constructor(string memory uri) ERC1155(uri) {}
 

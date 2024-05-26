@@ -7,7 +7,7 @@ interface Props {
 const Approve: React.FC<Props> = ({ tokenStandard }) => {
     return (
         <>
-            <div className="card card" style={{ height: 400, display: "block", padding: 50   }}>
+            <div className="card card" style={{ height: 450, display: "block", padding: 50   }}>
                 <div className="card-title">
                     Approve
                 </div>
@@ -22,14 +22,22 @@ const Approve: React.FC<Props> = ({ tokenStandard }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row mb-3">
+                            {tokenStandard === TokenStandard.ERC20 && <div className="row mb-3">
                                 <div className="col">
                                     <div className="form-floating">
                                         <input type="text" className="form-control" id="amount" name="amount" placeholder="Amount" required></input>
                                         <label htmlFor="amount" className="form-label">Amount</label>
                                     </div>
                                 </div>
-                            </div>
+                            </div>}
+                            {tokenStandard === TokenStandard.ERC721 && <div className="row mb-3">
+                                <div className="col">
+                                    <div className="form-floating">
+                                        <input type="text" className="form-control" id="tokenId" name="tokenId" placeholder="Token ID" required></input>
+                                        <label htmlFor="tokenId" className="form-label">Token ID</label>
+                                    </div>
+                                </div>
+                            </div>}
                         </div>
                         <div className="row mb-3">
                             <button type="submit" className="btn btn-primary">Approve</button>

@@ -7,10 +7,12 @@ import { ArrowRight, CaretRightFill } from 'react-bootstrap-icons';
 import { mockRentedTokens } from '../../mock_data/data';
 
 
-const BorrowedTokens = () => {
-    const itemsPerPage: number = 5; // Number of items to display per page
+interface Props {
+    tokens: RentedToken[];
+}
 
-    const tokens = mockRentedTokens;
+const BorrowedTokens  : React.FC<Props> = ({ tokens }) => {
+    const itemsPerPage: number = 5; // Number of items to display per page
 
     const onSelectToken = (token: RentedToken) => {
 
@@ -62,7 +64,7 @@ const BorrowedTokens = () => {
                 />
             </div>
 
-            <div className='card card-custom'  style={{ height: 400, paddingTop: 30,  overflow: "auto" }}>
+            <div className='card card-custom'  style={{ height: 450, paddingTop: 30,  overflow: "auto" }}>
                 <Table striped bordered hover>
                     <thead>
                         <tr>

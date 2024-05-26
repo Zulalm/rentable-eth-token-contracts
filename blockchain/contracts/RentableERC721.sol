@@ -31,7 +31,6 @@ contract RentableERC721 is ERC721 {
     mapping(address account => Balance) private _balances;
     mapping(uint256 => Node) private nodes;
     uint256 private freeListHead;
-    uint256 private _totalSupply;
 
 
     mapping(uint256 tokenId => RentedToken rentDetails) private _rentedTokens;

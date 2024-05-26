@@ -5,7 +5,7 @@ export enum TokenStandard {
 }
 
 export interface Token {
-    id: number;
+    address: string;
     name: string;
     symbol: string;
     amount: number;

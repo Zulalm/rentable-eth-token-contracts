@@ -1,58 +1,59 @@
-import { TokenStandard } from "../../../models/Token";
-interface Props {
-    tokenStandard: TokenStandard
-}
+import { useState } from "react";
 
-const Rent: React.FC<Props> = ({ tokenStandard }) => {
+const SafeTransferFrom = () => {
+    const [isChecked, setIsChecked] = useState<boolean>(false);
     return (
         <>
-            <div className="card" style={{ height: 400 , display: "block", padding: 50   }}>
+            <div className="card" style={{ height: 450 , display: "block", padding: 50   }}>
                 <div className="card-title">
-                    Rent Tokens
+                Safe Transfer From
                 </div>
                 <div className="card-body">
                     <form>
                         <div className="col mb-3">
-                            {tokenStandard !== TokenStandard.ERC20 && (<div className="row mb-3">
-                                <div className="col">
-                                    <div className="form-floating">
-                                        <input type="text" className="form-control" id="tokenId" name="tokenId" placeholder="Token Id" required />
-                                        <label className="form-label" htmlFor="tokenId">Token Id</label>
-                                    </div>
-                                </div>
-                            </div>)}
-                            {tokenStandard !== TokenStandard.ERC721 && (<div className="row mb-3">
-                                <div className="col">
-                                    <div className="form-floating">
-                                        <input type="text" className="form-control" id="amount" name="amount" placeholder="Amount" required />
-                                        <label className="form-label" htmlFor="amount">Amount</label>
-                                    </div>
-                                </div>
-                            </div>)}
                             <div className="row mb-3">
                                 <div className="col">
-                                    <div className="form-floating">
-                                        <input type="date" className="form-control ml-1" id="startDate" name="startDate" required />
-                                        <label htmlFor="startDate" className="form-label">Start Date</label>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <div className="form-floating">
-                                        <input type="date" className="form-control" id="endDate" name="endDate" required />
-                                        <label htmlFor="endDate" className="form-label">End Date</label>
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" id="transferType" name="transferType" value="" checked={isChecked}
+                                            onChange={() => setIsChecked(!isChecked)} />
+                                        <label className="form-label" htmlFor="transferType">Safe Transfer with Data</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="row mb-3">
                                 <div className="col">
                                     <div className="form-floating">
-                                        <input type="text" className="form-control" id="address" name="address" placeholder="Address" required></input>
-                                        <label htmlFor="address" className="form-label">Address</label>
+                                        <input type="text" className="form-control" id="from" name="from" placeholder="From" required></input>
+                                        <label htmlFor="from" className="form-label">From</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="row mb-3">
-                                <button type="submit" className="btn btn-primary">Rent</button>
+                                <div className="col">
+                                    <div className="form-floating">
+                                        <input type="text" className="form-control" id="to" name="to" placeholder="To" required></input>
+                                        <label htmlFor="to" className="form-label">To</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row mb-3">
+                                <div className="col">
+                                    <div className="form-floating">
+                                        <input type="text" className="form-control" id="tokenId" name="tokenId" placeholder="Token ID" required></input>
+                                        <label htmlFor="tokenId" className="form-label">Token ID</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {isChecked && <div className="row mb-3">
+                                <div className="col">
+                                    <div className="form-floating">
+                                        <input type="text" className="form-control" id="data" name="data" placeholder="Data" required></input>
+                                        <label htmlFor="data" className="form-label">Data</label>
+                                    </div>
+                                </div>
+                            </div>}
+                            <div className="row mb-3">
+                                <button type="submit" className="btn btn-primary">Safe Transfer</button>
                             </div>
 
                         </div>
@@ -65,4 +66,4 @@ const Rent: React.FC<Props> = ({ tokenStandard }) => {
         </>
     );
 };
-export default Rent;
+export default SafeTransferFrom;

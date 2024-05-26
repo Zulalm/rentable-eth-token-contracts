@@ -65,17 +65,13 @@ const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
                         <tr>
                             <th scope="col-3">Name</th>
                             <th scope="col">Symbol</th>
-                            <th scope="col">Token Standard</th>
-                            <th scope="col">Total Supply</th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentTokens.map((token) => (
-                            <tr key={token.id} onClick={() => handleTokenSelect(token)}>
+                            <tr key={token.address} onClick={() => handleTokenSelect(token)}>
                                 <td><button type="button" className="btn btn-link">{token.name}</button></td>
                                 <td>{token.symbol}</td>
-                                <td>{token!.standard ==  TokenStandard.ERC20?  "ERC20": (token!.standard  ==  TokenStandard.ERC721 ? "ERC721" :  "ERC1155")}</td>
-                                <td>{token.amount}</td>
                             </tr>
                         ))}
                     </tbody>

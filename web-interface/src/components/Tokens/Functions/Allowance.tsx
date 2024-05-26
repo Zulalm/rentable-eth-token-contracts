@@ -9,7 +9,7 @@ const Allowance: React.FC<Props> = ({ tokenStandard }) => {
     const [isChecked, setIsChecked] = useState<boolean>(false);
     return (
         <>
-            <div className="card card" style={{ height: 400, display: "block", padding: 50 }}>
+            <div className="card card" style={{ height: 450, display: "block", padding: 50 }}>
                 <div className="card-title">
                     Allowance
                 </div>
