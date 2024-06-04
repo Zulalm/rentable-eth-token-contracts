@@ -1,12 +1,20 @@
 import { useState } from "react";
-import { TokenStandard } from "../../../models/Token";
 interface Props {
-    tokenStandard: TokenStandard
+    handleAllowance: (owner: string, spender: string) => void;
 }
 
-const Allowance: React.FC<Props> = ({ tokenStandard }) => {
+const Allowance: React.FC<Props> = ({handleAllowance }) => {
 
-    const [isChecked, setIsChecked] = useState<boolean>(false);
+    const [allowed, setAllowed] = useState<boolean>(false);
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const owner = form['owner'].value;
+        const spender = form['spender'].value;
+        handleAllowance(owner, spender);
+        setAllowed(true);
+    }   
     return (
         <>
             <div className="card card" style={{ height: 450, display: "block", padding: 50 }}>
@@ -14,7 +22,7 @@ const Allowance: React.FC<Props> = ({ tokenStandard }) => {
                     Allowance
                 </div>
                 <div className="card-body">
-                    <form>
+                    <form onSubmit={(e) => onSubmit(e)}>
                         <div className="col mb-3">
                             <div className="row mb-3">
                                 <div className="col">
@@ -37,6 +45,9 @@ const Allowance: React.FC<Props> = ({ tokenStandard }) => {
                             <button type="submit" className="btn btn-primary">Allow</button>
                         </div>
                     </form>
+                    {allowed && <div className="alert alert-success" role="alert">
+                        Allowance granted successfully!
+                    </div>}
                 </div>
             </div>
 

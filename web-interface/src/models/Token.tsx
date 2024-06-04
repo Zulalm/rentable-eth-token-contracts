@@ -10,10 +10,11 @@ export interface Token {
     symbol: string;
     amount: number;
     standard: TokenStandard;
+    uri?: string;
 }
 
 export interface RentedToken {
-    id: number;
+    id: string;
     account: string;
     startDate: Date;
     endDate: Date;

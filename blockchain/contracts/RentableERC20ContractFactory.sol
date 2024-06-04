@@ -13,7 +13,6 @@ contract RentableERC20ContractFactory {
     }
 
     RentableTokenContract[] private contracts;
-    mapping(address contractAddress => string uri) private ERC1155uri;
 
     constructor(){}
 

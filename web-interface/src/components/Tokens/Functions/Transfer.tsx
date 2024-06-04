@@ -7,16 +7,23 @@ interface Props {
 
 const Transfer: React.FC<Props> = ({ tokenStandard, transfer }) => {
 
-    const [isChecked, setIsChecked] = useState<boolean>(false);
+    const [isChecked, setIsChecked] = useState<boolean>(true);
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const form = e.currentTarget;
-        const to = form['to'].value;
-        const amount = form['amount'].value;
-        console.log("", to, amount, "");
-        transfer("from", to, amount, "tokenId");
-
+        if(tokenStandard === TokenStandard.ERC20) {
+            const form = e.currentTarget;
+            const from = form['from'].value;
+            const to = form['to'].value;
+            const amount = form['amount'].value;
+            transfer(from, to, amount, "");
+        }else if(tokenStandard === TokenStandard.ERC721) {
+            const form = e.currentTarget;
+            const from = form['from'].value;
+            const to = form['to'].value;
+            const tokenId = form['tokenId'].value;
+            transfer(from, to, "", tokenId);
+        }
     }
     return (
         <>
@@ -30,8 +37,8 @@ const Transfer: React.FC<Props> = ({ tokenStandard, transfer }) => {
                             <div className="row mb-3">
                                 <div className="col">
                                     <div className="form-check">
-                                        <input className="form-check-input" type="checkbox" id="transferType" name="transferType" value="" checked={isChecked}
-                                            onChange={() => setIsChecked(!isChecked)} />
+                                        <input className="form-check-input" type="checkbox" id="transferType" name="transferType" value="" checked={isChecked || tokenStandard === TokenStandard.ERC721}
+                                            onChange={() => {if(TokenStandard.ERC721 !== tokenStandard){setIsChecked(!isChecked)}}} />
                                         <label className="form-label" htmlFor="transferType">Transfer from another address</label>
                                     </div>
                                 </div>

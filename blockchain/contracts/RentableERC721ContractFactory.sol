@@ -13,7 +13,6 @@ contract RentableERC721ContractFactory {
     }
 
     RentableTokenContract[] private contracts;
-    mapping(address contractAddress => string uri) private ERC1155uri;
 
     constructor(){}
 
@@ -23,7 +22,7 @@ contract RentableERC721ContractFactory {
 
 
     function createERC721Token(string memory name, string memory symbol) public returns(address){
-        RentableERC721 erc721Contract = new RentableERC721(name,symbol);
+        RentableERC721 erc721Contract = new RentableERC721(msg.sender,name,symbol);
         address contractAddress = address(erc721Contract);
         contracts.push(RentableTokenContract(contractAddress, name, symbol, "ERC721"));
         return contractAddress;

@@ -1,11 +1,44 @@
 [
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
       {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
       },
       {
-        "inputs": [
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      }
+    ],
+    "name": "createERC721Token",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRentableContracts",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
           {
             "internalType": "string",
             "name": "name",
@@ -15,52 +48,19 @@
             "internalType": "string",
             "name": "symbol",
             "type": "string"
-          }
-        ],
-        "name": "createERC721Token",
-        "outputs": [
+          },
           {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
+            "internalType": "string",
+            "name": "standard",
+            "type": "string"
           }
         ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "getRentableContracts",
-        "outputs": [
-          {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "contractAddress",
-                "type": "address"
-              },
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "standard",
-                "type": "string"
-              }
-            ],
-            "internalType": "struct RentableERC721ContractFactory.RentableTokenContract[]",
-            "name": "",
-            "type": "tuple[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
+        "internalType": "struct RentableERC721ContractFactory.RentableTokenContract[]",
+        "name": "",
+        "type": "tuple[]"
       }
-    ]
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

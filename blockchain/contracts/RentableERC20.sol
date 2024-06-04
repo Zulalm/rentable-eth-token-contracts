@@ -212,8 +212,15 @@ contract RentableERC20 is ERC20 {
     function reclaimRentedToken(address account, uint256 nodeId) public virtual {
         RentedToken memory token = nodes[nodeId].token;
         require(
+            token.nodeId == nodeId,
+            "Token is not initialized properly"
+        );
+
+        string memory message = string(abi.encodePacked("Token cannot be reclaimed yet: ", uintToString(token.endDate), " ", uintToString(block.timestamp)));
+
+        require(
             token.endDate < block.timestamp,
-            "Token cannot be returned yet"
+            message
         );
         // token should be returned
         uint256 prevIndex = nodes[nodeId].prev;
@@ -237,6 +244,30 @@ contract RentableERC20 is ERC20 {
         //borrower should return the token to avoid conflicts
         forceReturnBorrowedToken(token.renterOrBorrower, token.account);
     }
+    function uintToString(uint256 value) internal pure returns (string memory) {
+    // Convert value to string
+    if (value == 0) {
+        return "0";
+    }
+    
+    uint256 temp = value;
+    uint256 digits;
+    
+    while (temp != 0) {
+        digits++;
+        temp /= 10;
+    }
+    
+    bytes memory buffer = new bytes(digits);
+    
+    while (value != 0) {
+        digits -= 1;
+        buffer[digits] = bytes1(uint8(48 + value % 10));
+        value /= 10;
+    }
+    
+    return string(buffer);
+}
 
     function forceReturnBorrowedToken(
         uint256 nodeId,
@@ -337,6 +368,7 @@ contract RentableERC20 is ERC20 {
                 endDate: nodes[nodeId].token.endDate,
                 amount: nodes[nodeId].token.amount
             });
+            nodeId = nodes[nodeId].next;
         }
         return tokens;
     }

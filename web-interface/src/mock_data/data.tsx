@@ -174,7 +174,7 @@ const mockTokens: Token[] = [
 
 export const mockRentedTokens: RentedToken[] = [
     {
-        id: 1,
+        id: "1",
         account: "user123",
         startDate: new Date("2024-05-01"),
         endDate: new Date("2024-05-10"),
@@ -182,7 +182,7 @@ export const mockRentedTokens: RentedToken[] = [
         tokenId: 1234
     },
     {
-        id: 2,
+        id: "2",
         account: "user456",
         startDate: new Date("2024-05-03"),
         endDate: new Date("2024-05-18"),
@@ -190,7 +190,7 @@ export const mockRentedTokens: RentedToken[] = [
         tokenId: 5678
     },
     {
-        id: 3,
+        id: "3",
         account: "user789",
         startDate: new Date("2024-05-05"),
         endDate: new Date("2024-05-20"),

@@ -29,14 +29,17 @@ const DeployTokenContract = () => {
         try{
             if (tokenStandard == TokenStandard.ERC20) {
                 const address = await erc20FactoryContract.methods.createERC20Token(name, symbol, supply).send({from: accountList[0]});
-                navigate(`/tokens/${(address as unknown as string)}`);
+                navigate(`/tokens`);
 
             }
             else if (tokenStandard == TokenStandard.ERC721) {
                 await erc721FactoryContract.methods.createERC721Token(name, symbol).send({from: accountList[0]});
-    
+                navigate(`/tokens`);
+
             } else if (tokenStandard == TokenStandard.ERC1155) {
                 const address = await erc1155FactoryContract.methods.createERC1155Token(uri).send({from: accountList[0]});
+                navigate(`/tokens`);
+
             }
         }catch(e){
             console.log(e);

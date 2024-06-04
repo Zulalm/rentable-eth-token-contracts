@@ -113,13 +113,13 @@ contract RentableERC1155 is ERC1155 {
     }
 
     function rent(
+        address owner,
         address to,
         uint256 value,
         uint256 startDate,
         uint256 endDate,
         uint256 tokenId
     ) public virtual returns (bool) {
-        address owner = msg.sender;
         require(
             balanceOfInterval(owner, startDate, endDate, tokenId) >= value,
             "Renting amount exceeds the balance"

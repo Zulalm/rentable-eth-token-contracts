@@ -39,8 +39,13 @@ contract RentableERC721 is ERC721 {
 
     mapping(uint256 tokenId => address) private _owners;
 
+    uint256 private _tokenIdCounter;
+    address private _owner;
 
-    constructor(string memory name, string memory symbol) ERC721(name, symbol) {
+
+    constructor(address owner, string memory name, string memory symbol) ERC721(name, symbol) {
+        _tokenIdCounter = 0;
+        _owner = owner;
     }
 
     
@@ -54,6 +59,16 @@ contract RentableERC721 is ERC721 {
 
     event ReturnBorrowedTokenERC721(address account, uint256 tokenId);
     event ReclaimRentedTokenERC721(address account, uint256 tokenId);
+
+    function mint(address to) public {
+        if(msg.sender == _owner) {
+        uint256 tokenId = _tokenIdCounter;
+        _tokenIdCounter += 1;
+        _mint(to, tokenId);
+        }
+        
+    }
+
 
     function balanceOf(
         address account
@@ -115,16 +130,12 @@ contract RentableERC721 is ERC721 {
     }
 
         function rent(
+        address owner,
         address to,
         uint256 tokenId,
         uint256 startDate,
         uint256 endDate
     ) public virtual returns (bool) {
-        address owner = msg.sender;
-        require(
-            ownerOf(tokenId) != owner,
-            "Message sender is not the owner of the token."
-        );
         require(
             _balances[owner].noRentedTokens < MAX_NO_RENTINGS,
             "Maximum number of renting is reached."
@@ -181,9 +192,8 @@ contract RentableERC721 is ERC721 {
         emit RentERC721(owner, to, tokenId, startDate, endDate);
         return true;
     }
-function returnBorrowedToken(uint256 nodeId) public virtual {
+function returnBorrowedToken(address account, uint256 nodeId) public virtual {
         RentedToken memory token = nodes[nodeId].token;
-        address account = msg.sender;
         require(
                 token.endDate < block.timestamp,
             "Token cannot be returned yet"
@@ -210,9 +220,8 @@ function returnBorrowedToken(uint256 nodeId) public virtual {
 
         forceReclaimRentedToken(token.renterOrBorrower, token.account);
     }
-    function reclaimRentedToken(uint256 nodeId) public virtual {
+    function reclaimRentedToken(address account, uint256 nodeId) public virtual {
         RentedToken memory token = nodes[nodeId].token;
-        address account = msg.sender;
         require(
                 token.endDate < block.timestamp,
             "Token cannot be returned yet"
@@ -292,8 +301,7 @@ function returnBorrowedToken(uint256 nodeId) public virtual {
             emit ReclaimRentedTokenERC721(account, token.tokenId);
         }
     }
-    function getRentedTokens() public view returns (RentedToken[] memory) {
-        address account = msg.sender;
+    function getRentedTokens(address account) public view returns (RentedToken[] memory) {
         uint256 noNodes = _balances[account].noRentedTokens;
         RentedToken[] memory tokens = new RentedToken[](noNodes);
         uint256 nodeId = _balances[account].rentedHead;
@@ -350,12 +358,11 @@ function returnBorrowedToken(uint256 nodeId) public virtual {
     }
 
 
-    function getNoRentedTokens() public view returns(uint256) {
-        return _balances[msg.sender].noRentedTokens;
+    function getNoRentedTokens(address account) public view returns(uint256) {
+        return _balances[account].noRentedTokens;
     }
 
-    function getBorrowedTokens() public view returns (RentedToken[] memory) {
-        address account = msg.sender;
+    function getBorrowedTokens(address account) public view returns (RentedToken[] memory) {
         uint256 noNodes = _balances[account].noBorrowedTokens;
         RentedToken[] memory tokens = new RentedToken[](noNodes);
         uint256 nodeId = _balances[account].borrowedHead;
@@ -369,6 +376,7 @@ function returnBorrowedToken(uint256 nodeId) public virtual {
                 endDate: nodes[nodeId].token.endDate,
                 tokenId: nodes[nodeId].token.tokenId
             });
+            nodeId = nodes[nodeId].next;
         }
         return tokens;
     }

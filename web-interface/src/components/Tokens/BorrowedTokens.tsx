@@ -9,9 +9,10 @@ import { mockRentedTokens } from '../../mock_data/data';
 
 interface Props {
     tokens: RentedToken[];
+    returnToken: (nodeId: string) => void;
 }
 
-const BorrowedTokens  : React.FC<Props> = ({ tokens }) => {
+const BorrowedTokens  : React.FC<Props> = ({ tokens, returnToken }) => {
     const itemsPerPage: number = 5; // Number of items to display per page
 
     const onSelectToken = (token: RentedToken) => {
@@ -82,7 +83,7 @@ const BorrowedTokens  : React.FC<Props> = ({ tokens }) => {
                                 <td>{token.startDate.toUTCString()}</td>
                                 <td>{token.endDate.toUTCString()}</td>
                                 <td>{token.amount}</td>
-                                <td> { token.endDate.getTime() < Date.now() && <button className="btn btn-link">Return Token</button>}</td>
+                                <td> { token.endDate.getTime() < Date.now() && <button className="btn btn-link" onClick={() => returnToken(token.id)}>Return Token</button>}</td>
                             </tr>
                         ))}
                     </tbody>

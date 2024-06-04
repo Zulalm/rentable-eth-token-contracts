@@ -7,10 +7,11 @@ import { ArrowRight, CaretRightFill } from 'react-bootstrap-icons';
 
 interface Props {
     tokens: RentedToken[];
+    reclaimToken: (tokenId: string) => void;
 }
 
 
-const RentedTokens : React.FC<Props> = ({ tokens }) => {
+const RentedTokens : React.FC<Props> = ({ tokens, reclaimToken }) => {
     const itemsPerPage: number = 5; // Number of items to display per page
 
     const onSelectToken = (token: RentedToken) => {
@@ -81,7 +82,7 @@ const RentedTokens : React.FC<Props> = ({ tokens }) => {
                                 <td>{token.startDate.toUTCString()}</td>
                                 <td>{token.endDate.toUTCString()}</td>
                                 <td>{token.amount}</td>
-                                <td>{token.endDate.getTime() < Date.now() && <button className="btn btn-link">Reclaim Token</button>}</td>
+                                <td>{token.endDate.getTime() < Date.now() && <button className="btn btn-link" onClick={() => reclaimToken(token.id)}>Reclaim Token</button>}</td>
                             </tr>
                         ))}
                     </tbody>

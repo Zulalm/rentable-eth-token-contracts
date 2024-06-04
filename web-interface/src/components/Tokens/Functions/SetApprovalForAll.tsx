@@ -1,4 +1,17 @@
-const SetApprovalForAll = () => {
+interface Props {
+    handleSetApprovalForAll: (operator: string, approval: boolean) => void;
+}
+
+const SetApprovalForAll: React.FC<Props> = ({ handleSetApprovalForAll }) => {
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const operator = form['operator'].value;
+        const approval = form['approval'].value;
+        handleSetApprovalForAll(operator, approval);
+
+    }
     return (
         <>
             <div className="card" style={{ height: 450 , display: "block", padding: 50   }}>

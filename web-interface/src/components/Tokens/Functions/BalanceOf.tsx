@@ -1,26 +1,35 @@
 import { useState } from "react";
 import { TokenStandard } from "../../../models/Token";
 interface Props {
-    tokenStandard: TokenStandard
-    balance: (address: string, startDate: string, endDate: string) => void;
+    tokenStandard: TokenStandard;
+    balance: (address: string, startDate: string, endDate: string) => Promise<number>;
 }
 
 const BalanceOf: React.FC<Props> = ({ tokenStandard, balance }) => {
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const [balanceValue, setBalanceValue] = useState<number>(0);
+    const [showBalance, setShowBalance] = useState<boolean>(false);
+
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
         if (isChecked) {
             const address = form['address'].value;
             const startDate = form['startDate'].value;
             const endDate = form['endDate'].value;
-            balance(address, startDate, endDate);
+            const b = await balance(address, startDate, endDate);
+            setBalanceValue(Number(BigInt(b)));
+            setShowBalance(true);
+
+
         } else {
             const address = form['address'].value;
-            balance(address, "", "");
+            const b = await balance(address, "", "");
+            setBalanceValue(Number(BigInt(b)));
+            setShowBalance(true);
+            
         }
-
-
     }
 
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -31,7 +40,7 @@ const BalanceOf: React.FC<Props> = ({ tokenStandard, balance }) => {
                     Balance
                 </div>
                 <div className="card-body">
-                    <form onSubmit={(e) => { onSubmit(e) }}>
+                    <form onSubmit={async (e) => {await onSubmit(e) }}>
                         <div className="col mb-3">
                             <div className="row mb-3">
                                 <div className="col">
@@ -70,6 +79,9 @@ const BalanceOf: React.FC<Props> = ({ tokenStandard, balance }) => {
                             <button type="submit" className="btn btn-primary">Get Balance</button>
                         </div>
                     </form>
+                    {showBalance && <div className="alert alert-success" role="alert">
+                        <p>Balance is: {balanceValue}</p>
+                        </div>}
                 </div>
             </div>
 

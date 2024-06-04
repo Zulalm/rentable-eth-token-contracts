@@ -13,69 +13,77 @@ const Tokens = () => {
 
     const { web3, erc1155FactoryContract, erc20FactoryContract, erc721FactoryContract } = useWeb3();
     const onSelectToken = (token: Token) => {
-        navigate(`/tokens/${token.address}`);
+        if(token.standard === TokenStandard.ERC20) {
+            navigate(`/tokens/ERC20/${token.address}`);
+        } else if (token.standard === TokenStandard.ERC721) {
+            navigate(`/tokens/ERC721/${token.address}`);
+        } else if (token.standard === TokenStandard.ERC1155) {
+            navigate(`/tokens/ERC1155/${token.address}`);
+        }
+        
     }
     const onSelectERC1155Token = (token: Token) => {
         navigate(`/tokens/${token.address}`);
     }
+
     useEffect(() => {
+        const handleERC20Tokens = async () => {
+            const accountList = await window.ethereum.request({ method: 'eth_accounts' });
+            const tokens1 = await erc20FactoryContract.methods.getRentableContracts().call();
+            const erc20Tokens: Token[] = tokens1.map((token: any) => {
+                return {
+                    id: token.contractAddress,
+                    address: token.contractAddress,
+                    name: token.name,
+                    symbol: token.symbol,
+                    standard: TokenStandard.ERC20,
+                }
+            });
+            setTokens(erc20Tokens);
+        }
+    
+        const handleERC721Tokens = async () => {
+            const accountList = await window.ethereum.request({ method: 'eth_accounts' });
+            const tokens1 = await erc721FactoryContract.methods.getRentableContracts().call();
+            const erc721Tokens: Token[] = tokens1.map((token: any) => {
+                return {
+                    id: token.contractAddress,
+                    address: token.contractAddress,
+                    name: token.name,
+                    symbol: token.symbol,
+                    standard: TokenStandard.ERC721,
+                }
+            });
+            setTokens(erc721Tokens);
+        }
+    
+        const handleERC1155Tokens = async () => {
+            const accountList = await window.ethereum.request({ method: 'eth_accounts' });
+            const tokens1 = await erc1155FactoryContract.methods.getRentableContracts().call();
+            const erc1155Tokens: Token[] = tokens1.map((token: any) => {
+                return {
+                    id: token.contractAddress,
+                    address: token.contractAddress,
+                    uri: token.uri,
+                    standard: TokenStandard.ERC1155,
+                    symbol: "",
+                    name: "",
+                }
+            });
+            setTokens(erc1155Tokens);
+        }
+    
         if (web3) {
-            if (currentTab === "ERC20") {
+            if (currentTab === "ERC20" && erc20FactoryContract) {
                 handleERC20Tokens();
-            } else if (currentTab === "ERC721") {
+            } else if (currentTab === "ERC721"  && erc721FactoryContract) {
                 handleERC721Tokens();
-            } else if (currentTab === "ERC1155") {
+            } else if (currentTab === "ERC1155" && erc1155FactoryContract) {
                 handleERC1155Tokens();
             }
         }
-    }, [currentTab, web3])
-    const handleERC20Tokens = async () => {
-        const accountList = await window.ethereum.request({ method: 'eth_accounts' });
-
-        const tokens1 = await erc20FactoryContract.methods.getRentableContracts().call();
-        const erc20Tokens: Token[] = tokens1.map((token: any) => {
-            return {
-                id: token.contractAddress,
-                address: token.contractAddress,
-                name: token.name,
-                symbol: token.symbol,
-                standard: TokenStandard.ERC20,
-            }
-        });
-        setTokens(erc20Tokens);
-    }
-    const handleERC721Tokens = async () => {
-        const accountList = await window.ethereum.request({ method: 'eth_accounts' });
-
-
-        const tokens1 = await erc721FactoryContract.methods.getRentableContracts().call();
-        const erc721Tokens: Token[] = tokens1.map((token: any) => {
-            return {
-                id: token.contractAddress,
-                address: token.contractAddress,
-                name: token.name,
-                symbol: token.symbol,
-                standard: TokenStandard.ERC721,
-            }
-        });
-        setTokens(erc721Tokens);
-    }
-    const handleERC1155Tokens = async () => {
-        const accountList = await window.ethereum.request({ method: 'eth_accounts' });
-
-
-        const tokens1 = await erc1155FactoryContract.methods.getRentableContracts().call();
-        const erc1155Tokens: Token[] = tokens1.map((token: any) => {
-            return {
-                id: token.contractAddress,
-                address: token.contractAddress,
-                name: token.name,
-                symbol: token.symbol,
-                standard: TokenStandard.ERC1155,
-            }
-        });
-        setTokens(erc1155Tokens);
-    }
+    }, [currentTab, web3, erc20FactoryContract, erc721FactoryContract, erc1155FactoryContract]);
+    
 
     return (
         <>
@@ -95,9 +103,9 @@ const Tokens = () => {
                     </li>
                 </ul>
             </div>
-            {currentTab === "ERC20" && <SearchToken tokens={tokens} onSelectToken={onSelectToken} ></SearchToken>}
-            {currentTab === "ERC721" && <SearchToken tokens={tokens} onSelectToken={onSelectToken} ></SearchToken>}
-            {currentTab === "ERC1155" && <SearchToken tokens={tokens} onSelectToken={onSelectERC1155Token} ></SearchToken>}
+            {currentTab === "ERC20" && <SearchToken tokens={tokens} onSelectToken={onSelectToken} tokenStandard={TokenStandard.ERC20}></SearchToken>}
+            {currentTab === "ERC721" && <SearchToken tokens={tokens} onSelectToken={onSelectToken} tokenStandard={TokenStandard.ERC721}></SearchToken>}
+            {currentTab === "ERC1155" && <SearchToken tokens={tokens} onSelectToken={onSelectToken}  tokenStandard={TokenStandard.ERC1155}></SearchToken>}
 
             <Footer></Footer>
         </>

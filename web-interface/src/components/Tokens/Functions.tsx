@@ -1,4 +1,4 @@
-import { Table } from "react-bootstrap";
+import { Button, Modal, Table } from "react-bootstrap";
 import { TokenStandard } from "../../models/Token";
 import Allowance from "./Functions/Allowance";
 import Approve from "./Functions/Approve";
@@ -15,17 +15,22 @@ import { useWeb3 } from "../../web3/Web3Context";
 import ERC20ABI from '../../utils/contractABIs/ERC20ABI.json';
 import ERC721ABI from '../../utils/contractABIs/ERC721ABI.json';
 import ERC1155ABI from '../../utils/contractABIs/ERC1155ABI.json';
+import { start } from "repl";
+import URI from "./Functions/Uri";
+import Mint from "./Functions/Mint";
 interface Props {
     tokenStandard: TokenStandard;
     contractAddress: string;
+    setInitializedParent: (initialized: boolean) => void;
 }
 
 
-const Functions: React.FC<Props> = ({ tokenStandard, contractAddress }) => {
+const Functions: React.FC<Props> = ({ tokenStandard, contractAddress, setInitializedParent  }) => {
 
     const ERC20Functions = ["Rent", "Balance", "Allowance", "Approve", "Transfer"];
-    const ERC721Functions = ["Rent", "Balance", "OwnerOf", "SafeTransferFrom", "Transfer", "Approve", "GetApproved", "SetApprovalForAll", "IsApprovedForAll"];
-    const ERC1155Functions = ["Rent", "Balance", "Allowance", "Approve", "Transfer"];
+    const ERC721Functions = ["Rent", "Balance", "OwnerOf", "SafeTransferFrom", "Transfer", "Approve", "GetApproved", "SetApprovalForAll", "IsApprovedForAll", "Mint"];
+    const ERC1155Functions = ["Rent","Balance", "SafeTransferFrom", "SafeBatchTransferFrom", "BalanceOfBatch", "SetApprovalForAll", "IsApprovedForAll", "URI"];
+
 
 
     const [selectedFunction, setSelectedFunction] = useState<string>("Rent");
@@ -70,7 +75,20 @@ const Functions: React.FC<Props> = ({ tokenStandard, contractAddress }) => {
     const handleTransfer = async (from: string, to: string, amount: string, tokenId: string) => {
         if (contract) {
             try {
-                await contract.methods.transfer(to, parseInt(amount)).send({ from: account });
+                if(amount !== "" && tokenId == "")
+                {
+                    if(from !== ""){
+                        await contract.methods.transferFrom(from,to, parseInt(amount)).send({ from: account });
+                    }
+                    else{
+                        await contract.methods.transfer(to, parseInt(amount)).send({ from: account });
+                    }
+                
+                }
+                else if(amount == "" && tokenId !== "")
+                    {
+                        await contract.methods.transferFrom(from, to, tokenId).send({ from: account });
+                    }
             } catch (e) {
                 console.log(e);
             }
@@ -79,13 +97,13 @@ const Functions: React.FC<Props> = ({ tokenStandard, contractAddress }) => {
     const handleRent = async (tokenId: string, amount: string, startDate: string, endDate: string, address: string) => {
         if (contract) {
             try {
-                console.log(address, amount, startDate, endDate)
+                if(tokenStandard == TokenStandard.ERC20){
 
-                const startTimeStamp = new Date(startDate).getTime();
-                const endTimeStamp = new Date(endDate).getTime();
-                console.log(startTimeStamp, endTimeStamp)
-
-                await contract.methods.rent(account, address, amount, 1716681600000, 1716681605000).send({ from: account });
+                }
+                const startTimeStamp = new Date(startDate).getTime() / 1000;
+                const endTimeStamp = new Date(endDate).getTime() / 1000;
+                await contract.methods.rent(account, address, amount, startTimeStamp, endTimeStamp).send({ from: account });
+                setInitializedParent(false);
             } catch (e) {
                 console.log(e);
             }
@@ -96,21 +114,113 @@ const Functions: React.FC<Props> = ({ tokenStandard, contractAddress }) => {
         if (contract) {
             try {
                 if (startDate.length > 0 && endDate.length > 0) {
-                    const balance = await contract.methods.balanceOfInterval(address, new Date(startDate).getTime(), new Date(endDate).getTime()).call();
-                    console.log(balance);
+                    const balance = await contract.methods.balanceOfInterval(address, new Date(startDate).getTime() / 1000, new Date(endDate).getTime() / 1000).call();
+                    return balance;
+                    
                 } else {
-                    console.log(address)
                     const balance = await contract.methods.balanceOf(address).call();
-                    console.log(balance);
+                    return balance;
                 }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        return 0;
+    }
+    const handleAllowance = async (owner: string, spender: string) => {
+        if (contract) {
+            try {
+                await contract.methods.allowance(owner, spender).call({ from: account});
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        return 0;
+    }
+
+    const handleApprove = async (spender: string, amount: string) => {
+        if (contract) {
+            try {
+                await contract.methods.approve(spender, amount).call({ from: account });
             } catch (e) {
                 console.log(e);
             }
         }
     }
 
+    const handleGetApproved = async (tokenId: string) => {
+        if (contract) {
+            try {
+                const approval = await contract.methods.getApproved(tokenId).call({ from: account });
+                return approval;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    const handleIsApprovedForAll = async (owner: string, operator: string) => {
+        if (contract) {
+            try {
+                await contract.methods.isApprovedForAll(owner, operator).call({ from: account });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    const handleOwnerOf = async (tokenId: string) => {
+        if (contract) {
+            try {
+                const owner = await contract.methods.ownerOf(tokenId).call({ from: account });
+                return owner;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
 
-
+    const handleSafeTransferFrom = async (tokenId: string, from: string, to: string, data: string) => {
+        if (contract) {
+            try {
+                if(data == ""){
+                    await contract.methods.safeTransferFrom(from,to,tokenId).call({ from: account });
+                }else{
+                    await contract.methods.safeTransferFrom(from,to,tokenId, data).call({ from: account });
+                }
+                
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    const handleSetApprovalForAll = async (operator: string, approval: boolean) => {
+        if (contract) {
+            try {
+                await contract.methods.setApprovalForAll(operator, approval).call({ from: account });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    const handleGetURI = async (tokenId: string) => {
+        if (contract) {
+            try {
+                const uri = await contract.methods.uri(tokenId).call({ from: account });
+                return uri;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    const handleMint = async (to: string) => {
+        if (contract) {
+            try {
+                const tokenId = await contract.methods.mint(to).send({ from: account });
+                return tokenId;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
     return (
         <>
 
@@ -133,13 +243,15 @@ const Functions: React.FC<Props> = ({ tokenStandard, contractAddress }) => {
                         {selectedFunction === "Transfer" && <Transfer tokenStandard={tokenStandard} transfer={handleTransfer} />}
                         {selectedFunction === "Rent" && <Rent tokenStandard={tokenStandard} rent={handleRent}></Rent>}
                         {selectedFunction === "Balance" && <BalanceOf tokenStandard={tokenStandard} balance={handleBalance} />}
-                        {selectedFunction === "Allowance" && <Allowance tokenStandard={tokenStandard} />}
-                        {selectedFunction === "Approve" && <Approve tokenStandard={tokenStandard} />}
+                        {selectedFunction === "Allowance" && <Allowance handleAllowance={handleAllowance}/>}
+                        {selectedFunction === "Approve" && <Approve tokenStandard={tokenStandard} handleApprove={handleApprove} />}
                         {selectedFunction === "OwnerOf" && <OwnerOf />}
-                        {selectedFunction === "SafeTransferFrom" && <SafeTransferFrom />}
+                        {selectedFunction === "SafeTransferFrom" && <SafeTransferFrom  />}
                         {selectedFunction === "GetApproved" && <GetApproved />}
-                        {selectedFunction === "SetApprovalForAll" && <SetApprovalForAll />}
+                        {selectedFunction === "SetApprovalForAll" && <SetApprovalForAll handleSetApprovalForAll= {handleSetApprovalForAll}/>}
                         {selectedFunction === "IsApprovedForAll" && <IsApprovedForAll />}
+                        {selectedFunction === "URI" && <URI handleGetURI = {handleGetURI}/>}
+                        {selectedFunction === "Mint" && <Mint handleMint = {handleMint}/>}
                     </div>
                 </div>
             </div>

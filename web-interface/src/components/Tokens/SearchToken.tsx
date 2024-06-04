@@ -8,9 +8,10 @@ import { ArrowRight, CaretRightFill } from 'react-bootstrap-icons';
 interface Props {
     tokens: Token[];
     onSelectToken: (token: Token) => void;
+    tokenStandard: TokenStandard;
 }
 
-const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
+const SearchToken: React.FC<Props> = ({ tokens, onSelectToken, tokenStandard }) => {
     const itemsPerPage: number = 5; // Number of items to display per page
 
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -33,8 +34,9 @@ const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
     useEffect(() => {
         const start = (currentPage - 1) * itemsPerPage;
         const end = (currentPage) * itemsPerPage;
+        
         const filtered = tokens.filter(token =>
-            token.name.toLowerCase().includes(searchTerm.toLowerCase())
+                token.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredTokens(filtered);
         setCurrentTokens(filtered.slice(start, end));
@@ -60,7 +62,7 @@ const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
             </div>
 
             <div className='card card-custom'>
-                <Table striped bordered hover>
+                {tokenStandard !== TokenStandard.ERC1155 && (<Table striped bordered hover>
                     <thead>
                         <tr>
                             <th scope="col-3">Name</th>
@@ -75,7 +77,23 @@ const SearchToken: React.FC<Props> = ({ tokens, onSelectToken }) => {
                             </tr>
                         ))}
                     </tbody>
-                </Table>
+                </Table>)}
+                {tokenStandard == TokenStandard.ERC1155 && (<Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th scope="col-3">Address</th>
+                            <th scope="col">Uri</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {currentTokens.map((token) => (
+                            <tr key={token.address} onClick={() => handleTokenSelect(token)}>
+                                <td><button type="button" className="btn btn-link">{token.address}</button></td>
+                                <td>{token.uri}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>)}
                 <Pagination className="pagination">
                     <Pagination.Prev onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} />
                     {[...Array(Math.ceil(filteredTokens.length / itemsPerPage)).keys()].map((number) => (
