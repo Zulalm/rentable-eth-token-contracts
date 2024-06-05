@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/rentable-eth-token-contracts/static/css/main.33a25451.css",
+    "main.js": "/rentable-eth-token-contracts/static/js/main.10d6ac66.js",
+    "static/js/453.9359910b.chunk.js": "/rentable-eth-token-contracts/static/js/453.9359910b.chunk.js",
+    "index.html": "/rentable-eth-token-contracts/index.html",
+    "main.33a25451.css.map": "/rentable-eth-token-contracts/static/css/main.33a25451.css.map",
+    "main.10d6ac66.js.map": "/rentable-eth-token-contracts/static/js/main.10d6ac66.js.map",
+    "453.9359910b.chunk.js.map": "/rentable-eth-token-contracts/static/js/453.9359910b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.33a25451.css",
+    "static/js/main.10d6ac66.js"
+  ]
+}
