@@ -28,6 +28,7 @@ const DeployTokenContract = () => {
         const accountList = await window.ethereum.request({ method: 'eth_accounts' });
         try{
             if (tokenStandard == TokenStandard.ERC20) {
+                console.log("Creating ERC20 Token", name, symbol, supply);
                 const address = await erc20FactoryContract.methods.createERC20Token(name, symbol, supply).send({from: accountList[0]});
                 navigate(`/tokens`);
 

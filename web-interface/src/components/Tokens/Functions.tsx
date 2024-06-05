@@ -97,12 +97,15 @@ const Functions: React.FC<Props> = ({ tokenStandard, contractAddress, setInitial
     const handleRent = async (tokenId: string, amount: string, startDate: string, endDate: string, address: string) => {
         if (contract) {
             try {
-                if(tokenStandard == TokenStandard.ERC20){
-
-                }
                 const startTimeStamp = new Date(startDate).getTime() / 1000;
                 const endTimeStamp = new Date(endDate).getTime() / 1000;
-                await contract.methods.rent(account, address, amount, startTimeStamp, endTimeStamp).send({ from: account });
+                if(tokenStandard == TokenStandard.ERC20){
+                    await contract.methods.rent(account, address, amount, startTimeStamp, endTimeStamp).send({ from: account });
+                }else if(tokenStandard == TokenStandard.ERC721){
+                    await contract.methods.rent(account,address,tokenId,startTimeStamp,endTimeStamp).send({ from: account });
+                }else if(tokenStandard == TokenStandard.ERC1155){
+                    await contract.methods.rent(account, address,amount, startTimeStamp, endTimeStamp, tokenId).send({ from: account });
+                }                
                 setInitializedParent(false);
             } catch (e) {
                 console.log(e);

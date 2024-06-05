@@ -13,14 +13,14 @@ async function main() {
 
   await myRentableContract2.waitForDeployment();
 
-  console.log("The ERC20 Factory Contract deployed to:", await myRentableContract2.getAddress());
+  console.log("The ERC721Factory Contract deployed to:", await myRentableContract2.getAddress());
 
   const MyRentableContract3 = await ethers.getContractFactory("RentableERC1155ContractFactory");
   const myRentableContract3 = await MyRentableContract3.deploy();
 
   await myRentableContract3.waitForDeployment();
 
-  console.log("The ERC20 Factory Contract deployed to:", await myRentableContract3.getAddress());
+  console.log("The ERC1155 Factory Contract deployed to:", await myRentableContract3.getAddress());
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -30,6 +30,7 @@ const Rent: React.FC<Props> = ({ tokenStandard , rent}) => {
             const startDate = form['startDate'].value;
             const endDate = form['endDate'].value;
             const address = form['address'].value;
+            console.log(tokenId, startDate, endDate, address);
             rent(tokenId, "", startDate, endDate, address);
         }
 
