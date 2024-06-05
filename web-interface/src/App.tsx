@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
 import './App.css';
 import './index.css';
 import './styles/root.css';
@@ -15,14 +15,14 @@ import { Web3Provider } from './web3/Web3Context';
 function App() {
   return (
     <Web3Provider>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tokens" element={<Tokens />} />
             <Route path="/deploy" element={<DeployTokenContract />} />
             <Route path="/tokens/:standard/:address" element={<TokenDetails />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
     </Web3Provider>
   );
 }

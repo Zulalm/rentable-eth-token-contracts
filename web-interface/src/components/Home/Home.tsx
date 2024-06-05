@@ -16,12 +16,6 @@ const Home = () => {
 
     const [walletConnected, setWalletConnected] = useState<boolean>(false);
 
-    const onSelectTokens = () => {
-        navigate(`/tokens`);
-    }
-    const onSelectDeployTokens = () => {
-        navigate(`/tokens`);
-    }
 
     const connectMetamask = () => {
         if (window.ethereum) {

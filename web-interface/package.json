@@ -2,7 +2,7 @@
   "name": "web-interface",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Zulalm.github.io/rentable-eth-token-contracts",
+  "homepage": "https://Zulalm.github.io/rentable-eth-token-contracts/#",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
